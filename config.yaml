@@ -30,13 +30,13 @@ nodes:
             # - key: "node.cilium.io/agent-not-ready"
             #   value: "true"
             #   effect: "NoSchedule"
-      - |
+      - &kubeProxyConfig |
         apiVersion: kubeproxy.config.k8s.io/v1alpha1
         kind: KubeProxyConfiguration
         mode: "ipvs"
         ipvs:
           strictARP: true
-      - |
+      - &kubeletConfig |
         apiVersion: kubelet.config.k8s.io/v1beta1
         kind: KubeletConfiguration
         serverTLSBootstrap: true
@@ -57,16 +57,8 @@ nodes:
             # - key: "node.cilium.io/agent-not-ready"
             #   value: "true"
             #   effect: "NoSchedule"
-      - |
-        apiVersion: kubeproxy.config.k8s.io/v1alpha1
-        kind: KubeProxyConfiguration
-        mode: "ipvs"
-        ipvs:
-          strictARP: true
-      - |
-        apiVersion: kubelet.config.k8s.io/v1beta1
-        kind: KubeletConfiguration
-        serverTLSBootstrap: true
+      - *kubeProxyConfig
+      - *kubeletConfig
   - role: worker
     image: *image
     extraMounts:
