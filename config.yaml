@@ -19,7 +19,7 @@ nodes:
         hostPort: 443
     kubeadmConfigPatches:
       - |
-        apiVersion: kubeadm.k8s.io/v1beta3
+        apiVersion: kubeadm.k8s.io/v1beta2
         kind: InitConfiguration
         nodeRegistration:
           taints:
@@ -49,7 +49,7 @@ nodes:
         propagation: Bidirectional
     kubeadmConfigPatches: &workerPatches
       - |
-        apiVersion: kubeadm.k8s.io/v1beta3
+        apiVersion: kubeadm.k8s.io/v1beta2
         kind: InitConfiguration
         nodeRegistration:
           taints:
