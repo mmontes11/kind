@@ -6,7 +6,7 @@ networking:
   kubeProxyMode: "ipvs"
 nodes:
   - role: control-plane
-    image: &image kindest/node:v1.22.7
+    image: &image kindest/node:v1.25.3
     extraMounts:
       - hostPath: ./data/control-plane
         containerPath: /data
@@ -42,6 +42,8 @@ nodes:
         serverTLSBootstrap: true
   - role: worker
     image: *image
+    labels: &workerLabels
+      node.mmontes.io/type: compute
     extraMounts:
       - hostPath: ./data/worker
         containerPath: /data
@@ -61,6 +63,7 @@ nodes:
       - *kubeletConfig
   - role: worker
     image: *image
+    labels: *workerLabels
     extraMounts:
       - hostPath: ./data/worker-2
         containerPath: /data
