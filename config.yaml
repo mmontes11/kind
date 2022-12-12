@@ -4,41 +4,21 @@ networking:
   kubeProxyMode: "ipvs"
 nodes:
   - role: control-plane
-    image: &image kindest/node:v1.25.3
-    extraMounts:
-      - hostPath: ./data/control-plane
-        containerPath: /data
-        readOnly: false
-        propagation: Bidirectional
-    kubeadmConfigPatches:
-      - &kubeProxyConfig |
+    image: &image kindest/node:v1.26.0
+    kubeadmConfigPatches: &kubeadmConfigPatches
+      - |
         apiVersion: kubeproxy.config.k8s.io/v1alpha1
         kind: KubeProxyConfiguration
         mode: "ipvs"
         ipvs:
           strictARP: true
-      - &kubeletConfig |
+      - |
         apiVersion: kubelet.config.k8s.io/v1beta1
         kind: KubeletConfiguration
         serverTLSBootstrap: true
   - role: worker
     image: *image
-    labels: &workerLabels
-      node.mmontes.io/type: compute
-    extraMounts:
-      - hostPath: ./data/worker
-        containerPath: /data
-        readOnly: false
-        propagation: Bidirectional
-    kubeadmConfigPatches: &workerPatches
-      - *kubeProxyConfig
-      - *kubeletConfig
+    kubeadmConfigPatches: *kubeadmConfigPatches
   - role: worker
     image: *image
-    labels: *workerLabels
-    extraMounts:
-      - hostPath: ./data/worker-2
-        containerPath: /data
-        readOnly: false
-        propagation: Bidirectional
-    kubeadmConfigPatches: *workerPatches
+    kubeadmConfigPatches: *kubeadmConfigPatches
